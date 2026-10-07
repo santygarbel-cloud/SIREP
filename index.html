@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SIREP · Cada paso cuenta</title>
+<meta name="description" content="SIREP: una baldosa piezoeléctrica que convierte tus pasos en voltaje. Proyecto escolar.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f2f5f1;--ink:#16233a;--muted:#4d5b70;--volt:#ffc400;--screen:#0c241b;--trace:#5dffa0;--line:#cfd8d0;--bad:#b3261e;--ok:#1b7a4b;
+--h:"Bricolage Grotesque","Trebuchet MS",sans-serif;--b:"Atkinson Hyperlegible",Verdana,sans-serif}
+@media(prefers-color-scheme:dark){:root{--paper:#101a1a;--ink:#e8efe9;--muted:#a3b3ad;--line:#2a3a37;--bad:#ff8a80;--ok:#6fe3a3}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:1.08rem/1.65 var(--b)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--volt);outline-offset:3px}
+.wrap{max-width:1020px;margin:0 auto;padding:0 1.25rem}
+nav{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:1.25rem;align-items:center;overflow-x:auto;padding-block:.7rem;white-space:nowrap}
+nav b{font:800 1.2rem var(--h);margin-right:auto}
+nav a{text-decoration:none;color:var(--muted);font-size:.95rem}nav a:hover{color:var(--ink)}
+h1,h2,h3{font-family:var(--h);line-height:1.1;margin:0 0 .6rem}
+h1{font-size:clamp(3rem,10vw,6.5rem);font-weight:800;letter-spacing:-.03em}
+h2{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800}
+h3{font-size:1.25rem;font-weight:500}
+section{padding:4rem 0;border-bottom:1px solid var(--line)}
+p{max-width:68ch}
+.badges{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.2rem 0}
+.badges span{border:2px solid var(--ink);border-radius:99px;padding:.15rem .8rem;font-size:.9rem}
+.hero{display:grid;gap:2rem;padding:3rem 0 4rem}
+.lead{font-size:1.3rem;color:var(--muted)}
+/* osciloscopio */
+.scope{background:var(--screen);border-radius:14px;padding:1rem;box-shadow:0 0 0 6px #1e2f2a,0 0 0 7px #000}
+canvas{width:100%;height:240px;display:block;border-radius:8px;
+background:
+linear-gradient(#ffffff14 1px,transparent 1px) 0 0/100% 40px,
+linear-gradient(90deg,#ffffff14 1px,transparent 1px) 0 0/50px 100%}
+.ctrl{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;margin-top:.9rem}
+button{font:700 1rem var(--b);cursor:pointer;border-radius:10px;border:2px solid var(--volt);background:var(--volt);color:#16233a;padding:.65rem 1.1rem}
+button.alt{background:transparent;color:#d8f5e4;border-color:#5b7a6c}
+button[aria-pressed=true]{background:var(--trace);border-color:var(--trace);color:#06251a}
+.readout{margin-left:auto;color:var(--trace);font:700 1.05rem ui-monospace,Consolas,monospace}
+.hint{color:#9fc2b0;font-size:.9rem;margin:.6rem 0 0}
+/* contenido */
+.grid{display:grid;gap:1.5rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:1.5rem}
+.card{border-left:5px solid var(--volt);padding:.2rem 0 .2rem 1rem}
+.flow{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin:1.5rem 0}
+.flow span{border:2px solid var(--ink);border-radius:10px;padding:.5rem .9rem}
+.flow i{font-style:normal;color:var(--muted)}
+details{border-top:1px solid var(--line);padding:1rem 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font:500 1.25rem var(--h)}
+details p{margin:.8rem 0 0}
+.warn{background:var(--volt);color:#16233a;padding:1.4rem 1.6rem;border-radius:12px;margin:1.5rem 0}
+.warn h3{font-weight:800;font-size:1.5rem}
+.warn p{margin:0}
+.dd{display:grid;gap:1.5rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.dd ul{padding-left:1.2rem;margin:.4rem 0}
+.yes b{color:var(--ok)}.no b{color:var(--bad)}
+table{border-collapse:collapse;width:100%;margin-top:1rem;font-size:1rem}
+th,td{text-align:left;padding:.7rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
+.ph{border:2px dashed var(--muted);border-radius:12px;min-height:180px;display:grid;place-items:center;color:var(--muted);text-align:center;padding:1rem}
+.gal{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:1.5rem}
+.gal img{width:100%;border-radius:12px;display:block}
+.concl{font:800 clamp(1.5rem,3.5vw,2.3rem)/1.2 var(--h);max-width:24ch}
+.team{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1rem}
+.team span{border:2px solid var(--ink);border-radius:10px;padding:.6rem 1rem;font-weight:700}
+footer{padding:2.5rem 0;color:var(--muted)}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<nav aria-label="Secciones"><div class="wrap">
+<b>⚡ SIREP</b><a href="#problema">Problema</a><a href="#solucion">Solución</a><a href="#ciencia">Ciencia</a><a href="#uso">Uso</a><a href="#pruebas">Pruebas</a><a href="#retos">Retos</a><a href="#equipo">Equipo</a>
+</div></nav>
+
+<main>
+<header class="wrap hero">
+  <div>
+    <h1>SIREP</h1>
+    <p class="lead">Una baldosa que convierte tus pasos en voltaje. Con un solo paso, el movimiento se vuelve electricidad.</p>
+    <div class="badges"><span>🏫 Proyecto escolar</span><span>💎 Piezoelectricidad</span><span>📟 Probado con osciloscopio</span></div>
+  </div>
+  <div class="scope" role="group" aria-label="Simulador de la señal de un paso">
+    <canvas id="c" width="900" height="240" role="img" aria-label="Gráfica de voltaje en el tiempo"></canvas>
+    <div class="ctrl">
+      <button id="step">👣 Dar un paso</button>
+      <button id="rect" class="alt" aria-pressed="false">🔁 Rectificar la señal</button>
+      <span class="readout" id="ro" aria-live="polite">Pico: 0.0 V</span>
+    </div>
+    <p class="hint">Simulación ilustrativa (no son datos medidos). Toca la baldosa virtual con el botón y luego activa la rectificación: las partes negativas se voltean hacia arriba.</p>
+  </div>
+</header>
+
+<section id="problema"><div class="wrap">
+  <h2>🚨 El problema: energía que se pierde</h2>
+  <p>Cada recreo y cada cambio de clase llenan los pasillos de movimiento. Toda esa energía mecánica se disipa y no se aprovecha. En nuestro país, usar este tipo de energía todavía no es algo común.</p>
+  <div class="grid">
+    <div class="card"><h3>¿Qué pasa?</h3><p>Se desperdicia la energía mecánica dentro del colegio.</p></div>
+    <div class="card"><h3>¿A quién afecta?</h3><p>A todas las personas de la institución.</p></div>
+    <div class="card"><h3>¿Por qué importa?</h3><p>El aprovechamiento de la energía mecánica casi no está presente en el país.</p></div>
+  </div>
+</div></section>
+
+<section id="solucion"><div class="wrap">
+  <h2>🧩 La solución</h2>
+  <p>SIREP es una baldosa con discos piezoeléctricos en su interior. Cuando alguien camina sobre ella, la presión genera una señal eléctrica que podemos medir.</p>
+  <div class="flow" aria-label="Recorrido de la energía">
+    <span>👣 Paso</span><i>→</i><span>💎 Disco se deforma</span><i>→</i><span>〰️ Señal alterna</span><i>→</i><span>🔁 Rectificación</span><i>→</i><span>🔋 Energía aprovechable</span>
+  </div>
+</div></section>
+
+<section id="ciencia"><div class="wrap">
+  <h2>🔬 La ciencia, sin dolor</h2>
+  <p>Solo necesitas una idea: la energía no se crea ni se destruye, se transforma.</p>
+  <details open><summary>💎 Piezoelectricidad</summary>
+    <p>Algunos cristales y cerámicas producen electricidad cuando los aprietas o los doblas. Piensa en una esponja mojada: al apretarla sale agua; en estos materiales, lo que sale son cargas eléctricas. Los encendedores de chispa de cocina usan este principio.</p></details>
+  <details><summary>🔄 Transformación de energía</summary>
+    <p>Tu paso es energía mecánica. El disco se deforma y esa energía se convierte en eléctrica. Parte se pierde como calor y vibración, por eso el voltaje de un paso es pequeño.</p></details>
+  <details><summary>〰️ Rectificación de una onda</summary>
+    <p>Al presionar, la señal sube; al soltar, baja y se vuelve negativa. Es una onda alterna, como un columpio que va y viene. Un rectificador (por ejemplo, un puente de diodos) voltea las partes negativas hacia arriba para que la energía vaya en un solo sentido y se pueda guardar. Pruébalo en el simulador de arriba.</p></details>
+</div></section>
+
+<section id="uso"><div class="wrap">
+  <h2>🚶 Cómo usar SIREP</h2>
+  <div class="warn"><h3>⚠️ ¡No es una plataforma para saltar!</h3>
+  <p>Los discos son delicados. Exigirla de más no genera más energía: solo la rompe.</p></div>
+  <div class="dd">
+    <div class="yes"><b>✅ Sí</b><ul><li>Pisar de forma normal, como al caminar</li><li>Pasar una persona a la vez</li><li>Cuidarla como un instrumento científico</li></ul></div>
+    <div class="no"><b>❌ No</b><ul><li>Saltar o brincar encima</li><li>Dejar caer objetos pesados</li><li>Subirse en grupo o golpearla</li></ul></div>
+  </div>
+</div></section>
+
+<section id="pruebas"><div class="wrap">
+  <h2>🧪 Evidencias y resultados</h2>
+  <table>
+    <thead><tr><th>Prueba</th><th>Para qué sirvió</th></tr></thead>
+    <tbody>
+      <tr><td>💻 Simulaciones</td><td>Anticipar el comportamiento antes de construir</td></tr>
+      <tr><td>⚖️ Comparación con otra solución</td><td>Ver ventajas y límites frente a una alternativa</td></tr>
+      <tr><td>🛠️ Pruebas físicas</td><td>Comprobar que la baldosa genera voltaje</td></tr>
+      <tr><td>📏 Mediciones experimentales</td><td>Obtener valores reales de voltaje</td></tr>
+      <tr><td>📷 Fotos y capturas de pantalla</td><td>Documentar el proceso</td></tr>
+      <tr><td>⭐ Osciloscopio</td><td>Registrar y ver la señal eléctrica de un paso</td></tr>
+    </tbody>
+  </table>
+  <h3 style="margin-top:2.2rem">⭐ Prueba estrella: la señal en el osciloscopio</h3>
+  <p>El osciloscopio dibuja cómo cambia el voltaje en el tiempo, como un electrocardiograma de la electricidad.</p>
+  <!-- Reemplaza el div .ph por: <img src="assets/img/osciloscopio.jpg" alt="Señal de SIREP en el osciloscopio"> -->
+  <div class="ph">📸 Aquí va la captura del osciloscopio<br>(assets/img/osciloscopio.jpg)</div>
+  <div class="grid">
+    <div class="card"><h3>⚡ Voltaje generado</h3><p>[COMPLETAR: valor medido]</p></div>
+    <div class="card"><h3>🏋️ Capacidad de carga</h3><p>[COMPLETAR: peso máximo soportado]</p></div>
+  </div>
+  <div class="gal">
+    <div class="ph">📷 Foto del prototipo</div>
+    <div class="ph">📷 Foto de las pruebas físicas</div>
+  </div>
+</div></section>
+
+<section id="retos"><div class="wrap">
+  <h2>🧗 Retos y lecciones aprendidas</h2>
+  <div class="grid">
+    <div class="card"><h3>Materiales frágiles</h3><p>Los materiales comerciales resultaron muy delicados y no soportan un peso alto.</p></div>
+    <div class="card"><h3>Soldaduras que se rompen</h3><p>Los puntos de soldadura de los discos se quebraban constantemente, incluso al intentar protegerlos.</p></div>
+  </div>
+  <p style="margin-top:2.5rem" class="concl">Los piezoeléctricos comerciales estándar no son viables para proyectos de alto peso o tráfico pesado.</p>
+  <p>Sirven para demostrar el principio con cargas pequeñas. Para pasillos concurridos harían falta materiales más robustos o un diseño que proteja los discos.</p>
+</div></section>
+
+<section id="equipo"><div class="wrap">
+  <h2>👥 Equipo</h2>
+  <div class="team"><span>Matthew Colmenares</span><span>Santiago García</span><span>Jerónimo Guerrero</span><span>Mariana Moyano</span></div>
+</div></section>
+</main>
+
+<footer><div class="wrap">Hecho con ⚡ y curiosidad por estudiantes de nuestro colegio. · <a href="https://github.com/TU-USUARIO/sirep">Ver código en GitHub</a></div></footer>
+
+<script>
+const cv=document.getElementById('c'),g=cv.getContext('2d'),ro=document.getElementById('ro'),rb=document.getElementById('rect');
+const W=cv.width,H=cv.height,mid=H/2;let rect=false,t0=null,peak=0,amp=1;
+function v(t){ // pulso amortiguado oscilante (ilustrativo)
+  if(t<0)return 0;return amp*Math.exp(-t*2.2)*Math.sin(t*14);}
+function draw(now){
+  g.clearRect(0,0,W,H);
+  g.strokeStyle='#ffffff40';g.beginPath();g.moveTo(0,mid);g.lineTo(W,mid);g.stroke();
+  g.strokeStyle='#5dffa0';g.lineWidth=3;g.shadowColor='#5dffa0';g.shadowBlur=8;g.beginPath();
+  const el=t0===null?-1:(now-t0)/1000;let pk=0;
+  for(let x=0;x<=W;x+=2){
+    const t=el-(1-x/W)*0; const tt=(x/W)*2.2-0.15; // eje de tiempo fijo
+    let y=el<0?0:(tt<=el?v(tt):0); if(rect)y=Math.abs(y); pk=Math.max(pk,Math.abs(y));
+    const py=mid-y*(mid-20); x?g.lineTo(x,py):g.moveTo(x,py);}
+  g.stroke();g.shadowBlur=0;
+  if(el>=0)ro.textContent='Pico: '+(pk*amp*3.2).toFixed(1)+' V (ilustrativo)';
+  requestAnimationFrame(draw);}
+document.getElementById('step').onclick=()=>{amp=.75+Math.random()*.25;t0=performance.now();};
+rb.onclick=()=>{rect=!rect;rb.setAttribute('aria-pressed',rect);rb.textContent=rect?'🔁 Señal rectificada':'🔁 Rectificar la señal';};
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>
